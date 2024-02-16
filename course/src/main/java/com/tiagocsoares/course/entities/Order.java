@@ -31,7 +31,10 @@ public class Order implements Serializable {
     @OneToMany(mappedBy = "id.order") // Como o OrderItem possui a chave composta OrderItemPK, o mappedBy deve ser o atributo id.order
     private Set<OrderItem> items = new HashSet<>();
 
-
+    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL)
+    // O cascade é utilizado para garantir que quando um pedido for salvo, o pagamento também será salvo
+    // É obrigatório o uso do cascadeo quando queremos que o id seja o mesmo em ambos os elementos
+    private Payment payment;
 
 
 
@@ -85,6 +88,28 @@ public class Order implements Serializable {
         if(orderStatus != null)
             this.orderStatus = orderStatus.getCode();
     }
+
+    public Payment getPayment() {
+        return payment;
+    }
+
+    public void setPayment(Payment payment) {
+        this.payment = payment;
+    }
+
+
+
+
+    public Double getTotal() {
+        double sum = 0.0;
+        for (OrderItem x: items) {
+            sum += x.getSubTotal();
+        }
+        return sum;
+    }
+
+
+
 
     @Override
     public boolean equals(Object o) {

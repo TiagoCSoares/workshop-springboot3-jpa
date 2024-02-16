@@ -2,13 +2,13 @@ package com.tiagocsoares.course.resources;
 
 import com.tiagocsoares.course.entities.User;
 import com.tiagocsoares.course.services.UserService;
+import org.apache.catalina.Server;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import java.net.URI;
 import java.util.List;
 
 @RestController // uma classe que manipula solicitações HTTP e retorna respostas no formato de dados que não são vinculados a uma visualização específica, como JSON ou XML.
@@ -28,4 +28,16 @@ public class UserResource {
         User obj = service.findById(id);
         return ResponseEntity.ok().body(obj);
     }
+
+
+    @PostMapping
+    public ResponseEntity<User> insert(@RequestBody User obj) {
+        obj = service.insert(obj);
+        URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}")
+                .buildAndExpand(obj.getId()).toUri();
+        return ResponseEntity.created(uri).body(obj);
+    }
+
+
+
 }

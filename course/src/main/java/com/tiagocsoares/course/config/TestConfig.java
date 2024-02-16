@@ -74,6 +74,15 @@ public class TestConfig implements CommandLineRunner {
         OrderItem oi4 = new OrderItem(o3, p5, 2, p5.getPrice());
 
         orderItemRepository.saveAll(Arrays.asList(oi1, oi2, oi3, oi4));
+
+        Payment pay1 = new Payment(null, Instant.parse("2019-07-22T17:21:22Z"), o3);
+        // Como o pagamento está associado ao pedido, o pagamento é salvo automaticamente
+        // Então primeiro associamos o pagamento ao pedido e depois salvamos o pedido
+        o3.setPayment(pay1);
+
+        orderRepository.save(o3);
+
+
     }
 }
 

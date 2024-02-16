@@ -5,7 +5,9 @@ import jakarta.persistence.*;
 
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 import static com.tiagocsoares.course.entities.OrderStatus.valueOf;
 
@@ -25,6 +27,13 @@ public class Order implements Serializable {
     @ManyToOne  // transforma em chave estrangeira
     @JoinColumn(name = "client_id")  // nome da chave estrangeira
     private User client;
+
+    @OneToMany(mappedBy = "id.order") // Como o OrderItem possui a chave composta OrderItemPK, o mappedBy deve ser o atributo id.order
+    private Set<OrderItem> items = new HashSet<>();
+
+
+
+
 
     public Order() {
     }
@@ -60,6 +69,11 @@ public class Order implements Serializable {
     public void setClient(User client) {
         this.client = client;
     }
+
+    public  Set<OrderItem> getItems() {
+        return items;
+    }
+
 
     public OrderStatus getOrderStatus() {
         // Transforma o valor numérico em OrderStatus

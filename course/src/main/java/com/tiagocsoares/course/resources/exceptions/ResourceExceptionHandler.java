@@ -1,5 +1,6 @@
 package com.tiagocsoares.course.resources.exceptions;
 
+import com.tiagocsoares.course.services.exceptions.DataBaseException;
 import com.tiagocsoares.course.services.exceptions.ResourceNotFoundException;
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
@@ -20,4 +21,16 @@ public class ResourceExceptionHandler {
         StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
         return ResponseEntity.status(status).body(err);
     }
+
+
+    @ExceptionHandler(DataBaseException.class) // Anotação que indica que o método a seguir é um manipulador de exceções
+    // Qualquer exceção do tipo ResourceNotFoundException será interceptada por este método
+    public ResponseEntity<StandardError> dataBase(DataBaseException e, HttpServletRequest request) {
+        String error = "Database error";
+        HttpStatus status = HttpStatus.BAD_REQUEST;
+        StandardError err = new StandardError(Instant.now(), status.value(), error, e.getMessage(), request.getRequestURI());
+        return ResponseEntity.status(status).body(err);
+    }
 }
+
+
